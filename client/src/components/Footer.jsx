@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="bg-cBlack text-white w-full border-t-2 border-cWhite">
+    <footer className="relative bottom-0 bg-cBlack text-white w-full border-t-2 border-cWhite">
       <div className="container mx-auto text-center">
         <p className="text-sm">© 2024 THE Bar & Cafe. All rights reserved.</p>
         <ul className="flex justify-center space-x-6 mt-4">
