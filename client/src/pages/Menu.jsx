@@ -5,12 +5,10 @@ import { menuItems } from "../api/items.js";
 
 const Menu = () => {
   const [items, setItems] = useState([]);
-  const [orderQuantity, setOrderQuantity] = useState([{}]);
-
-  console.log(orderQuantity)
-
-  const [type, setType] = useState("Veg");
-  const isVeg = type === "Veg";
+  const [orderQuantity, setOrderQuantity] = useState([{
+    id: "",
+    quantity: 0
+  }]);
 
   
 
@@ -28,7 +26,11 @@ const Menu = () => {
   }, []);
 
   const manageQuantity = (id, action )=>{
-    console.log(action)
+    console.log(id)
+
+    const updatedQuantity = {
+
+    }
     // setOrderQuantity((prevQuantity)=>{
     //     const currentQuantity = prevQuantity[id] || 0;
 
