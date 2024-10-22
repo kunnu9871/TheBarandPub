@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { removeFromCart, clearCart } from "../redux/cartSlice";
+
 
 const Cart = () => {
     const [cartItem, setCartItem] = useState([]);
 
     const cartData= useSelector((state)=> state.cart);
+    console.log(cartData)
+
+    const dispatch = useDispatch();
 
     useEffect(()=>{
       setCartItem(cartData)
@@ -51,7 +56,7 @@ const Cart = () => {
                   <button className="border-2 rounded-lg px-2">+</button>
                   <button
                     className="text-red-500 hover:text-red-700"
-                    onClick={() => dispatch(removefromCart(item.id))}
+                    onClick={() => dispatch(removeFromCart(item.id))}
                   >
                     <FaTrash />
                   </button>
