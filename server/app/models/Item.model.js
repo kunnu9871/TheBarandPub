@@ -5,12 +5,13 @@ const itemsSchema = new mongoose.Schema(
     itemName: { type: String, required: true, trim: true },
     drinkType: {
       type: String,
+      required: true,
       enum: ["alcohol", "non-alcohol"],
       default: ["alcohol"],
     },
-    alcoholType: { type: String, enum:["whiskey", "beer"], default : ["whiskey"] },
-    quantity: { type: [String] },
-    imageUrl: { type: String, trim: true },
+    alcoholType: { type: String, required: true, enum:["whiskey", "beer", "softDrink"], default : ["whiskey"] },
+    size: { type: [String], required: true },
+    imageUrl: { type: String,required: true, trim: true },
   },
   { Timestamp: true }
 );

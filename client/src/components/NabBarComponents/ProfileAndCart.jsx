@@ -19,7 +19,7 @@ const ProfileAndCart = ({setIsProfileOpen}) => {
           className="object-cover object-center"
         />
       </li>
-      <NavLink className="relative">
+      <NavLink to={'/cart'} className="relative">
         <BiDish 
           className="h-10 w-10"
         />

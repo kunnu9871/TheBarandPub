@@ -7,29 +7,29 @@ const Carousel = () => {
   const [imgIndex, setImgIndex] = useState(0);
   const [incrementing, setIncrementing] = useState(true);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setImgIndex((prevIndex) => {
-  //       if (incrementing) {
-  //         if (prevIndex < bgImage.length - 1) {
-  //           return prevIndex + 1;
-  //         } else {
-  //           setIncrementing(false);
-  //           return prevIndex;
-  //         }
-  //       } else {
-  //         if (prevIndex > 0) {
-  //           return prevIndex - 1;
-  //         } else {
-  //           setIncrementing(true);
-  //           return prevIndex;
-  //         }
-  //       }
-  //     });
-  //   }, 4000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setImgIndex((prevIndex) => {
+        if (incrementing) {
+          if (prevIndex < bgImage.length - 1) {
+            return prevIndex + 1;
+          } else {
+            setIncrementing(false);
+            return prevIndex;
+          }
+        } else {
+          if (prevIndex > 0) {
+            return prevIndex - 1;
+          } else {
+            setIncrementing(true);
+            return prevIndex;
+          }
+        }
+      });
+    }, 4000);
 
-  //   return () => clearInterval(interval);
-  // }, [bgImage.length, incrementing]);
+    return () => clearInterval(interval);
+  }, [bgImage.length, incrementing]);
 
   const bulletBtnClick = (e) => {
     setImgIndex(Number(e.target.name));

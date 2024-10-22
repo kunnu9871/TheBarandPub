@@ -14,16 +14,16 @@ const allItems = async (req, res)=>{
 
 const addItemData = async (req, res)=>{
     try {
-        const {itemName,drinkType,alcoholType,quantity, imageUrl } = req.body;
+        const {itemName,drinkType,alcoholType,size, imageUrl } = req.body;
         const itemDetails = {
             itemName,
             drinkType,
             alcoholType,
-            quantity,
+            size,
             imageUrl
         };
 
-        if(!itemName || !drinkType || !alcoholType || !quantity || !imageUrl){
+        if(!itemName || !drinkType || !alcoholType || !size || !imageUrl){
             return res.status(400).json({
                 status : 'failed to add',
                 message : "all fields are required"

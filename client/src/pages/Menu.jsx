@@ -5,74 +5,86 @@ import { menuItems } from "../api/items.js";
 
 const Menu = () => {
   const [items, setItems] = useState([]);
-  const [orderQuantity, setOrderQuantity] = useState([{
-    id: "",
-    quantity: 0
-  }]);
+  const [orderQuantity, setOrderQuantity] = useState([]);
+  const [selectedSize, setSelectedSize] = useState({});
+  const dispatch = useDispatch();
 
-  
-
- const memo = useMemo(()=>{
-  const apiCalling = async () => {
-    // console.log('api called');
-    const apiResponse = await menuItems();
-    setItems(apiResponse);
-  }
-  return apiCalling;
- },[setItems]);
+  const memo = useMemo(() => {
+    const apiCalling = async () => {
+      const apiResponse = await menuItems();
+      setItems(apiResponse);
+    };
+    return apiCalling;
+  }, [setItems]);
 
   useEffect(() => {
     memo();
-  }, []);
+  }, [memo]);
 
-  const manageQuantity = (id, action )=>{
-    console.log(id)
-
-    const updatedQuantity = {
-
+  const increaseQuantity = (id) => {
+    const existingItem = orderQuantity.find((item) => item.id === id);
+    if (existingItem) {
+      setOrderQuantity(
+        orderQuantity.map((item) => {
+          if (item.id === existingItem.id) {
+            return { ...item, quantity: item.quantity + 1 };
+          }
+          return item;
+        })
+      );
+    } else {
+      setOrderQuantity((prev) => [...prev, { id, quantity: 1 }]);
     }
-    // setOrderQuantity((prevQuantity)=>{
-    //     const currentQuantity = prevQuantity[id] || 0;
-
-    //     if(action === "increment"){
-    //       return {
-    //        ...currentQuantity , [id]: currentQuantity + 1
-    //       }
-    //     };
-
-    //     if(action === "decrement" && prevQuantity[id] > 0){
-
-    //       return {
-    //         ...currentQuantity , [id] : prevQuantity[id] - 1
-    //       }
-    //     };
-
-    //     return prevQuantity;
-    // })
   };
 
-  
+  const decreaseQuantity = (id) => {
+    const existingItem = orderQuantity.find((item) => item.id === id);
+    if (existingItem) {
+      setOrderQuantity(
+        orderQuantity.map((item) => {
+          if (item.id === existingItem.id && item.quantity > 0) {
+            return { ...item, quantity: item.quantity - 1 };
+          }
+          return item;
+        })
+      );
+    }
+  };
 
-  // const dispatch = useDispatch();
+  const handleAddToCart = (id) => {
+    const selectedItem = items.find((item) => item._id === id);
+    const quantity = orderQuantity.find((item) => item.id === id)?.quantity || 0;
+    const size = selectedSize[id] || null;
 
-  const handleAddToCart = (event) => {
-    // console.log(event.target);
-    // dispatch(
-    //   addToCart({
-    //     id: event.target.id,
-    //   })
-    // );
+    if (!size) {
+      alert("Please select a size before adding to the cart.");
+      return;
+    }
+
+    if (quantity > 0) {
+      dispatch(
+        addToCart({
+          id: selectedItem._id,
+          name: selectedItem.itemName,
+          imageUrl: selectedItem.imageUrl,
+          quantity,
+          size,
+        })
+      );
+    } else {
+      alert("Please select at least one quantity before adding to the cart.");
+    }
   };
 
   return (
     <div
       id="menuPage"
-      style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
+      style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}
       className="relative top-16 mt-2 w-full bg-cWhite grid gap-6 justify-center overflow-hidden p-8"
     >
       {items.map((data) => (
         <div
-          id={data}
+          id={data._id}
           key={data._id}
           className="w-full rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-1.5 
           ease-in-out duration-300 cursor-pointer"
@@ -85,9 +97,9 @@ const Menu = () => {
               alt={data.itemName}
             />
             {/* Price */}
-            <div className="absolute top-2 right-2 bg-white text-gray-800 font-bold py-1 px-3 rounded shadow-md">
-              ₹750
-            </div>
+            {/* <div className="absolute top-2 right-2 bg-white text-gray-800 font-bold py-1 px-3 rounded shadow-md">
+              ₹{data.price}
+            </div> */}
           </div>
 
           <div className="p-4">
@@ -97,50 +109,56 @@ const Menu = () => {
 
             {/* Size Selection */}
             <div className="mt-4">
-              <div className="text-gray-700 font-medium mb-2">Quantity</div>
+              <div className="text-gray-700 font-medium mb-2">Size</div>
               <div className="flex items-center mb-4">
-                {/* Half Size Option */}
                 <label className="inline-flex items-center mr-4">
                   <select
-                    name=""
-                    id="quantity"
+                    value={selectedSize[data._id] || ""}
+                    onChange={(e) =>
+                      setSelectedSize({
+                        ...selectedSize,
+                        [data._id]: e.target.value,
+                      })
+                    }
                     className="block w-full bg-white border border-gray-300 text-gray-800 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500"
                   >
+                    <option value="">Select Size</option>
                     {data.size.map((size, index) => (
-                      <option key={index} value="">
+                      <option key={index} value={size}>
                         {size}
                       </option>
                     ))}
                   </select>
                 </label>
               </div>
-              <div className="border-b border-gray-300 mb-4"></div>
-
-              <div className="border-b border-gray-300 mb-4"></div>
             </div>
 
-            {/* Add to Cart Button */}
-            <div className="flex justify-center">
+            {/* Add / Remove quantity & add to cart button */}
+            <div className="flex justify-between">
+              <div className="border border-gray-500 min-w-[100px] rounded-2xl flex items-center px-4 justify-between">
+                <button
+                  onClick={() => decreaseQuantity(data._id)}
+                  className="text-black font-bold text-2xl"
+                >
+                  -
+                </button>
+                <span className="text-black font-bold text-xl">
+                  {orderQuantity.find((item) => item.id === data._id)
+                    ?.quantity || 0}
+                </span>
+                <button
+                  onClick={() => increaseQuantity(data._id)}
+                  className="text-black font-bold text-2xl"
+                >
+                  +
+                </button>
+              </div>
+
               <button
-                name="decrement"
-                onClick={(event)=>manageQuantity(data._id, event.target.name)}
+                onClick={() => handleAddToCart(data._id)}
                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
               >
-                -
-              </button>
-              <span>{orderQuantity[data._id] || 0}</span>
-              <button
-                name="increment"
-                onClick={(event)=>manageQuantity(data._id, event)}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-              >
-                +
-              </button>
-              <button
-                onClick={handleAddToCart}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-              >
-                add to cart
+                Add to Cart
               </button>
             </div>
           </div>
