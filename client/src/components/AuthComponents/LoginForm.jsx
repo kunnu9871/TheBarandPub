@@ -1,47 +1,50 @@
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { login } from "../../api/api.js";
-import { useSelector, useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/userSlice.js";
 
-
-
-const LoginForm = ({setIsLoginFormOpen})=> {
-  
-  const initialState ={
-    email : "",
-    password : ""
+const LoginForm = ({
+  setIsLoginFormOpen,
+  setFormType,
+  setIsAuthComponentOpen,
+}) => {
+  const initialState = {
+    email: "",
+    password: "",
   };
-  const [formData, setFormData]= useState(initialState);
-  
-  const select = useSelector((state)=> state.user);
+  const [formData, setFormData] = useState(initialState);
+
+  const select = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-
   // extracting data from global state......
-  const {isLoggedIn, userData} = select;
+  const { isLoggedIn, userData } = select;
   // console.log(isLoggedIn, userData);
 
   //handling close button of login form.....
-  const handleClosedButton = ()=>{
-    setIsLoginFormOpen((prev)=> !prev);
-  }
+  const handleClosedButton = () => {
+    setIsLoginFormOpen((prev) => !prev);
+  };
 
   // console.log(formData)
 
-  const handleFormData = (event)=>{
-    setFormData(
-      {...formData, [event.target.name]: event.target.value}
-    )};
+  const handleFormData = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
 
-
-  // form submit button functionality.....  
+  // form submit button functionality.....
   const handleSubmit = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     // calling API....
     const userData = await login(formData);
-    // console.log('inside loginForm this is the response from server',userData);
-    dispatch(loginSuccess(userData));
+
+    if (userData.status === "success") {
+      dispatch(loginSuccess(userData));
+      window.location.reload();
+    }else{
+      alert(`ops! ${userData.message}`)
+    }
   };
 
   return (
@@ -110,7 +113,14 @@ const LoginForm = ({setIsLoginFormOpen})=> {
           </div>
           <div className="flex gap-1">
             <p>Don't have an account?</p>
-            <button className="text-blue-600 font-semibold hover:underline">
+            <button
+              onClick={() => {
+                setIsLoginFormOpen((prev) => !prev);
+                setIsAuthComponentOpen((prev) => !prev);
+                setFormType("signup");
+              }}
+              className="text-blue-600 font-semibold hover:underline"
+            >
               Sign up
             </button>
           </div>
@@ -119,6 +129,5 @@ const LoginForm = ({setIsLoginFormOpen})=> {
     </div>
   );
 };
-
 
 export default LoginForm;

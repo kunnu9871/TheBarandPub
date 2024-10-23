@@ -1,5 +1,5 @@
 import {useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { CiCamera } from "react-icons/ci";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/userSlice";
@@ -9,13 +9,15 @@ const Profile = ({setIsProfileOpen}) => {
   const [userPicture, setUserPicture] = useState("/assets/profilePic.png");
   const userName = useSelector((state) => state.user.userData);
 
-  console.log('inside the profile section line number 12',userName);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch()
 
  const handleLogout = ()=>{
   dispatch(logout());
   setIsProfileOpen(prev => !prev);
+  navigate("/")
+  window.location.reload()
  };
   
  

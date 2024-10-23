@@ -24,7 +24,7 @@ const ProfileAndCart = ({setIsProfileOpen}) => {
         <BiDish 
           className="h-10 w-10"
         />
-        <span className="absolute bg-white text-black font-bold rounded-md w-6 h-6 text-center top-[-8px] right-[-16px]">{selector.reduce((acc, cur)=> acc + cur.quantity, 0)}</span>
+        <span className="absolute bg-white text-black font-bold rounded-md w-6 h-6 text-center top-[-8px] right-[-16px]">{selector?.reduce((acc, cur)=> acc + cur.quantity, 0) || 0}</span>
       </NavLink>
     </div>
   );

@@ -11,7 +11,6 @@ const encryptedPassword = (password)=>{
 //compare password......
 
 const compare_password = (given_password, password)=>{
-    console.log('inside compare function')
     return bcrypt.compareSync(given_password, password, (error)=>{
         console.log(error)
     });

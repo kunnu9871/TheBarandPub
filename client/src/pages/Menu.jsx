@@ -1,13 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../redux/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  decreaseQuantity,
+  increaseQuantity,
+} from "../redux/cartSlice";
 import { menuItems } from "../api/items.js";
 
 const Menu = () => {
   const [items, setItems] = useState([]);
-  const [orderQuantity, setOrderQuantity] = useState([]);
-  const [selectedSize, setSelectedSize] = useState({});
+  const [quantity, setQuantity] = useState([]);
+  const [size, setSize] = useState([]);
+
   const dispatch = useDispatch();
+
+  const select = useSelector((state) => state.cart);
+
+  console.log(quantity);
 
   const memo = useMemo(() => {
     const apiCalling = async () => {
@@ -21,19 +30,42 @@ const Menu = () => {
     memo();
   }, [memo]);
 
-  const increaseQuantity = (id) => {
-    const existingItem = orderQuantity.find((item) => item.id === id);
+  // const increaseQuantity = (id) => {
+  // };
+
+  const handleSize = (id, value) => {
+    const existingItem = size.find((item) => item.id === id);
+
     if (existingItem) {
-      setOrderQuantity(
-        orderQuantity.map((item) => {
-          if (item.id === existingItem.id) {
-            return { ...item, quantity: item.quantity + 1 };
-          }
-          return item;
-        })
+      setSize((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, size: value } : item))
       );
     } else {
-      setOrderQuantity((prev) => [...prev, { id, quantity: 1 }]);
+      setSize((prev) => [...prev, { id: id, size: value }]);
+    }
+  };
+
+  const handleQuantity = (id, action) => {
+    const existingItem = quantity.find((item) => item.id === id);
+
+    if(action === "increment"){
+      if (existingItem) {
+        setQuantity((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+          )
+        );
+      }else{
+         setQuantity((prev)=> [...prev, {id:id, quantity : 1}])
+      };
+    }else{
+      if (existingItem) {
+        setQuantity((prev) =>
+          prev.map((item) =>
+            (item.id === existingItem.id && item.quantity > 0) ? { ...item, quantity: item.quantity - 1 } : item
+          )
+        );
+      }
     }
   };
 
@@ -53,7 +85,8 @@ const Menu = () => {
 
   const handleAddToCart = (id) => {
     const selectedItem = items.find((item) => item._id === id);
-    const quantity = orderQuantity.find((item) => item.id === id)?.quantity || 0;
+    const quantity =
+      orderQuantity.find((item) => item.id === id)?.quantity || 0;
     const size = selectedSize[id] || null;
 
     if (!size) {
@@ -113,13 +146,7 @@ const Menu = () => {
               <div className="flex items-center mb-4">
                 <label className="inline-flex items-center mr-4">
                   <select
-                    value={selectedSize[data._id] || ""}
-                    onChange={(e) =>
-                      setSelectedSize({
-                        ...selectedSize,
-                        [data._id]: e.target.value,
-                      })
-                    }
+                    onChange={(e) => handleSize(data._id, e.target.value)}
                     className="block w-full bg-white border border-gray-300 text-gray-800 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500"
                   >
                     <option value="">Select Size</option>
@@ -137,17 +164,18 @@ const Menu = () => {
             <div className="flex justify-between">
               <div className="border border-gray-500 min-w-[100px] rounded-2xl flex items-center px-4 justify-between">
                 <button
-                  onClick={() => decreaseQuantity(data._id)}
+                  name="decrement"
+                  onClick={(e) => handleQuantity(data._id, e.target.name)}
                   className="text-black font-bold text-2xl"
                 >
                   -
                 </button>
                 <span className="text-black font-bold text-xl">
-                  {orderQuantity.find((item) => item.id === data._id)
-                    ?.quantity || 0}
+                  {quantity.find((item) => item.id === data._id)?.quantity || 0}
                 </span>
                 <button
-                  onClick={() => increaseQuantity(data._id)}
+                  name="increment"
+                  onClick={(e) => handleQuantity(data._id, e.target.name)}
                   className="text-black font-bold text-2xl"
                 >
                   +

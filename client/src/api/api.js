@@ -28,18 +28,23 @@ const login = async (bodyData) => {
       }
     );
 
-    if (!loginResponse.ok) {
-      throw new error(`Error : ${loginResponse.status}`);
-    }
-
+    
     const jsonResponse = await loginResponse.json();
+
+
+    if (!loginResponse.ok) {
+      return jsonResponse;
+    };
 
     if (loginResponse.ok) {
       return jsonResponse;
-    }
+    };
+    
   } catch (error) {
+
     return error;
   }
 };
+
 
 export { register, login };

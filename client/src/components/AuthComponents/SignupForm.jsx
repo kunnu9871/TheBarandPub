@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { register } from "../../api/api";
 import { IoMdClose } from "react-icons/io";
-import { NavLink } from "react-router-dom";
 
-const SignUpForm = ({ setIsSignupFormOpen }) => {
+const SignUpForm = ({ setIsSignupFormOpen, setIsAuthComponentOpen, setFormType }) => {
   const initial_state = {
     firstName: "",
     lastName: "",
@@ -28,7 +27,10 @@ const SignUpForm = ({ setIsSignupFormOpen }) => {
     setFormData(initial_state);
 
     const response = await register(formData);
-    console.log(response);
+    if(response.status === "success"){
+      alert('sign up successfully, Please login')
+      setIsSignupFormOpen((prev)=> !prev);
+    };
   };
   return (
     <div
@@ -126,9 +128,15 @@ const SignUpForm = ({ setIsSignupFormOpen }) => {
         {/* // bottom section----- */}
         <div className="flex gap-2 border-t-2 p-4 justify-center items-center">
           <p>Already have an account?</p>
-          <NavLink className="text-blue-600 font-semibold hover:underline">
+          <button
+            onClick={()=> {
+              setIsSignupFormOpen((prev)=> !prev);
+              setIsAuthComponentOpen((prev)=> !prev)
+              setFormType('login')
+            }}
+          className="text-blue-600 font-semibold hover:underline">
             Log in
-          </NavLink>
+          </button>
         </div>
       </div>
     </div>

@@ -10,7 +10,6 @@ const Header = () => {
   const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
   const [formType, setFormType] = useState("");
 
-
   return (
     <div className="fixed w-full z-40 top-0">
       {/* //navBar......... */}
@@ -25,18 +24,26 @@ const Header = () => {
           formType={formType}
           setIsAuthComponentOpen={setIsAuthComponentOpen}
           setIsSignupFormOpen={setIsSignupFormOpen}
-          setIsLoginFormOpen = {setIsLoginFormOpen}
+          setIsLoginFormOpen={setIsLoginFormOpen}
         />
       )}
 
       {/* // to render signUp form */}
       {formType === "signup" && isSignupFormOpen && (
-        <SignUpForm setIsSignupFormOpen={setIsSignupFormOpen} />
+        <SignUpForm
+          setIsSignupFormOpen={setIsSignupFormOpen}
+          setIsAuthComponentOpen={setIsAuthComponentOpen}
+          setFormType={setFormType}
+        />
       )}
 
       {/* // to open login form with email and password */}
       {formType === "login" && isLoginFormOpen && (
-        <LoginForm setIsLoginFormOpen={setIsLoginFormOpen} />
+        <LoginForm
+          setIsLoginFormOpen={setIsLoginFormOpen}
+          setFormType={setFormType}
+          setIsAuthComponentOpen={setIsAuthComponentOpen}
+        />
       )}
     </div>
   );
