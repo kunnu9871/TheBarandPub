@@ -16,8 +16,6 @@ const Menu = () => {
 
   const select = useSelector((state) => state.cart);
 
-  console.log(quantity);
-
   const memo = useMemo(() => {
     const apiCalling = async () => {
       const apiResponse = await menuItems();
@@ -30,8 +28,6 @@ const Menu = () => {
     memo();
   }, [memo]);
 
-  // const increaseQuantity = (id) => {
-  // };
 
   const handleSize = (id, value) => {
     const existingItem = size.find((item) => item.id === id);
@@ -69,39 +65,24 @@ const Menu = () => {
     }
   };
 
-  const decreaseQuantity = (id) => {
-    const existingItem = orderQuantity.find((item) => item.id === id);
-    if (existingItem) {
-      setOrderQuantity(
-        orderQuantity.map((item) => {
-          if (item.id === existingItem.id && item.quantity > 0) {
-            return { ...item, quantity: item.quantity - 1 };
-          }
-          return item;
-        })
-      );
-    }
-  };
-
   const handleAddToCart = (id) => {
     const selectedItem = items.find((item) => item._id === id);
-    const quantity =
-      orderQuantity.find((item) => item.id === id)?.quantity || 0;
-    const size = selectedSize[id] || null;
+    const selectedQuantity = quantity.find((item) => item.id === id)?.quantity || 0;
+    const selectedSize = size.find((item)=> item.id === id)?.size || '';
 
-    if (!size) {
+    if (!selectedSize) {
       alert("Please select a size before adding to the cart.");
       return;
     }
 
-    if (quantity > 0) {
+    if (selectedQuantity > 0) {
       dispatch(
         addToCart({
           id: selectedItem._id,
           name: selectedItem.itemName,
           imageUrl: selectedItem.imageUrl,
-          quantity,
-          size,
+          selectedQuantity,
+          selectedSize,
         })
       );
     } else {
