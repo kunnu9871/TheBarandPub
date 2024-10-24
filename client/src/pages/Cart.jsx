@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { removeFromCart, clearCart } from "../redux/cartSlice";
+import { removeFromCart, clearCart, increaseQuantity, decreaseQuantity } from "../redux/cartSlice";
+
 
 
 const Cart = () => {
     const [cartItem, setCartItem] = useState([]);
 
-    const cartData= useSelector((state)=> state.cart);
-    console.log(cartData)
+    const cartData= useSelector((state)=> state?.cart || []);
 
     const dispatch = useDispatch();
 
@@ -47,15 +47,19 @@ const Cart = () => {
                   className="w-auto h-24 object-cover rounded mr-4"
                 />
                 <div className="flex-1">
-                  <h3 className="text-gray-800 font-semibold">{item.title}</h3>
+                  <h3 className="text-gray-800 font-semibold">{item.name}</h3>
                   {/* <p className="text-gray-600">${item.price.toFixed(2)}</p> */}
                 </div>
 
               {/* increment and decrement section */}
                 <div className="flex gap-5">
-                  <button className="border-2 rounded-lg px-2">-</button>
-                  <div className="mx-4">{item.quantity}</div>
-                  <button className="border-2 rounded-lg px-2">+</button>
+                  <button 
+                  onClick={()=> dispatch(decreaseQuantity(item.id))}
+                  className="border-2 rounded-lg px-2">-</button>
+                  <div className="mx-4">{item.selectedQuantity}</div>
+                  <button 
+                    onClick={()=> dispatch(increaseQuantity(item.id))}
+                  className="border-2 rounded-lg px-2">+</button>
                   <button
                     className="text-red-500 hover:text-red-700"
                     onClick={() => dispatch(removeFromCart(item.id))}
