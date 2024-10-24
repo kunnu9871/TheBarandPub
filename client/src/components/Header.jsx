@@ -11,14 +11,14 @@ const Header = () => {
   const [formType, setFormType] = useState("");
 
   return (
-    <div className="fixed w-full z-40 top-0">
-      {/* //navBar......... */}
+    <div className="sticky w-full z-40 top-0">
+      {/* Navigation Bar */}
       <NavBar
         setFormType={setFormType}
         setIsAuthComponentOpen={setIsAuthComponentOpen}
       />
 
-      {/* //Sign up popup and singup Form.... */}
+      {/* Auth Modal */}
       {isAuthComponentOpen && (
         <AuthComponent
           formType={formType}
@@ -28,7 +28,7 @@ const Header = () => {
         />
       )}
 
-      {/* // to render signUp form */}
+      {/* Sign Up Form */}
       {formType === "signup" && isSignupFormOpen && (
         <SignUpForm
           setIsSignupFormOpen={setIsSignupFormOpen}
@@ -37,7 +37,7 @@ const Header = () => {
         />
       )}
 
-      {/* // to open login form with email and password */}
+      {/* Login Form */}
       {formType === "login" && isLoginFormOpen && (
         <LoginForm
           setIsLoginFormOpen={setIsLoginFormOpen}
@@ -50,3 +50,4 @@ const Header = () => {
 };
 
 export default Header;
+

@@ -38,7 +38,7 @@ const Carousel = () => {
   return (
     <div
       id="carousel"
-      className="h-[450px] w-[100%] flex items-center justify-between relative top-16 mt-2 z-30"
+      className="h-[450px] w-[100%] flex items-center justify-between relative z-30"
     >
       <div
         id="images"
@@ -48,7 +48,7 @@ const Carousel = () => {
           <img
             key={data.id}
             src={data.imageUrl}
-            style={{ translate: `${-100 * imgIndex}%`}}
+            style={{ translate: `${-100 * imgIndex}%` }}
             className="w-full object-cover object-center flex-shrink-0 flex-grow-0 ease-in-out duration-1000 block"
           />
         ))}
@@ -64,7 +64,6 @@ const Carousel = () => {
         <IoIosArrowBack className="text-4xl text-cWhite" />
       </button>
 
-      {/* Radio Buttons */}
       <div
         id="radioBtn"
         className="h-10 sm:w-[20%] sm:right-[40%] absolute bottom-0 right-[40%] flex items-center shrink justify-center gap-2 "

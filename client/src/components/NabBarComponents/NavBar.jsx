@@ -61,19 +61,19 @@ const NavBar = ({ setIsAuthComponentOpen, setFormType }) => {
               isOpen ? "top-14 block z-50" : "hidden md:flex"
             }`}
           >
-            <li className="flex items-center px-2 py-2 md:py-0 hover:text-pink-500 hover:shadow-pink-500/80 transition duration-300 ease-in-out">
+            <li className="navLink">
               <FaHome className="mr-1" />
               <NavLink to="/" onClick={closeMenu}>
                 Home
               </NavLink>
             </li>
-            <li className="flex items-center px-2 py-2 md:py-0 hover:text-pink-500 hover:shadow-pink-500/80 transition duration-300 ease-in-out">
+            <li className="navLink">
               <FaBars className="mr-1" />
               <NavLink to="/menu" onClick={closeMenu}>
                 Menu
               </NavLink>
             </li>
-            <li className="px-2 py-2 md:py-0 hover:text-pink-500 hover:shadow-pink-500/80 transition duration-300 ease-in-out">
+            <li className="navLink">
               <NavLink
                 to="/contactUS"
                 className={({ isActive }) =>
@@ -87,22 +87,22 @@ const NavBar = ({ setIsAuthComponentOpen, setFormType }) => {
                 Contact Us
               </NavLink>
             </li>
-            <li className="flex items-center px-2 py-2 md:py-0 hover:text-pink-500 hover:shadow-pink-500/80 transition duration-300 ease-in-out">
+            <li className="navLink">
               <FaCalendarAlt className="mr-1" />
               <NavLink
                 to="/reservation"
-                className="font-bold"
+                className="font-bold hover:drop-shadow-2xl"
                 onClick={closeMenu}
               >
                 Table Booking
               </NavLink>
             </li>
-
+ 
             {!isLogIn && (
               <>
                 <li
                   id="login"
-                  className="px-2 py-2 md:py-0 hover:text-pink-500 hover:shadow-pink-500/80 transition duration-300 ease-in-out"
+                  className="navLink"
                 >
                   <button
                     onClick={() => handleAuthButtonClick("login")}
@@ -113,7 +113,7 @@ const NavBar = ({ setIsAuthComponentOpen, setFormType }) => {
                 </li>
                 <li
                   name="signup"
-                  className="px-2 py-2 md:py-0 hover:text-pink-500 hover:shadow-pink-500/80 transition duration-300 ease-in-out"
+                  className="navLink"
                 >
                   <button
                     onClick={() => handleAuthButtonClick("signup")}

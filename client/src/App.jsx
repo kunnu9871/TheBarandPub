@@ -6,20 +6,24 @@ import Menu from "./pages/Menu";
 import Header from "./components/Header";
 import AdminPage from "./pages/admin/AdminPage";
 import Cart from "./pages/Cart";
-// import Test from "./pages/Test";
+import TableBooking from "./pages/TableBooking";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   return (
-    <div className="w-full h-dvh relative">
+    <div className="min-h-screen flex flex-col"> {/* Correct layout with flexbox */}
       <Header />
-      <Routes>
-        <Route path="/" element={<Home/>}></Route>
-        {/* <Route path="/test" element={<Test/>}></Route> */}
-        <Route path="/menu" element={<Menu/>}></Route>
-        <Route path="/cart" element={<Cart/>}></Route>
-        <Route path="/admin" element={<AdminPage/>}></Route>
-      </Routes>
-      <Footer/>
+      <ToastContainer/>
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/reservation" element={<TableBooking />} />
+        </Routes>
+      </main>
+      <Footer />
     </div>
   );
 };
