@@ -1,11 +1,10 @@
 import connectDb from "./app/connection/db.js";
 import app from "./app.js";
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
-console.log("the cloud name is  ", process.env.API_KEY)
 
 
 // Data Base connection.....

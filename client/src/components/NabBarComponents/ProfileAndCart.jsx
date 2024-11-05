@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 
 const ProfileAndCart = ({setIsProfileOpen}) => {
   const selector = useSelector((state)=> state.cart);
+  const {userData:{avatar}} = useSelector((state) => state.user);
 
 
   return (
@@ -15,7 +16,7 @@ const ProfileAndCart = ({setIsProfileOpen}) => {
       onClick={()=> setIsProfileOpen((prev) => !prev)}
       className="h-10 w-10 rounded-full cursor-pointer overflow-hidden">
         <img
-          src="assets/profilePic.png"
+          src={avatar || "assets/profilePic.png"}
           alt="profile picture"
           className="object-cover object-center"
         />

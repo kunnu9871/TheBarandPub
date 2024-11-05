@@ -1,53 +1,46 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
-// cloudinary.config({
-//   cloud_name: process.env.CLOUD_NAME,
-//   api_key: process.env.API_KEY,
-//   api_secret: process.env.API_SECRET,
-// });
 
- console.log("the cloud name is  ", process.env.PORT)
+cloudinary.config({
+  cloud_name: "thebarandcafe",
+  api_key: "274823297599962",
+  api_secret: "WZ2wOnNV4SReTIKX3B_aH_57mYA",
+});
 
-cloudinary.config({ 
-    cloud_name: process.env.CLOUD_NAME, 
-    api_key: process.env.API_KEY, 
-    api_secret: process.env.API_SECRET,
-});   
+const uploadOnCloudinary = async (localPath, cloudinaryFolderName) => {
 
-const uploadOnCloudinary = async (avatarLocalPath) => {
   try {
-    if (!avatarLocalPath) return null;
+    if (!localPath) return null;
 
     //upload on cloudinary.......
 
-    const response = await cloudinary.uploader.upload(avatarLocalPath, {
+    const response = await cloudinary.uploader.upload(localPath, {
       resource_type: "auto",
+      folder: cloudinaryFolderName,
+      public_id: Math.round(Math.random() * 1E9),
     });
 
-    console.log("the file is successfully uploaded on ", response);
+    const optimizeUrl = cloudinary.url(response.public_id, {
+      fetch_format: "auto",
+      quality: "auto",
+    });
 
-    return response;
+   
+
+    if(optimizeUrl){
+      fs.unlinkSync(localPath);
+    }
+
+    return optimizeUrl;
 
   } catch (error) {
+    console.log(error);
+    
     // to remove the temporary file from the sever.....
-    console.log(error)
-
-    fs.unlinkSync(avatarLocalPath);
+    fs.unlinkSync(localPath);
     return null;
   }
 };
-
-    
-    // // Optimize delivery by resizing and applying auto-format and auto-quality
-    // const optimizeUrl = cloudinary.url('shoes', {
-    //     fetch_format: 'auto',
-    //     quality: 'auto'
-    // });
-    
-    // console.log(optimizeUrl);
-
-
-
 
 export { uploadOnCloudinary };

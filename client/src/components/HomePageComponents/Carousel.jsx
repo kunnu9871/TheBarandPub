@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import images from "../../store/imageData.js";
+import { publicAssets } from "../../api/assets.js";
+
 
 const Carousel = () => {
-  const [bgImage, setBgImage] = useState(images);
+  const [bgImage, setBgImage] = useState([]);
   const [imgIndex, setImgIndex] = useState(0);
   const [incrementing, setIncrementing] = useState(true);
+
+  console.log(bgImage)
+  
+  useEffect(()=>{
+    console.log("api calling")
+    publicAssets().then((data)=> setBgImage(data.data))
+  }, [setBgImage])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -46,7 +54,7 @@ const Carousel = () => {
       >
         {bgImage.map((data) => (
           <img
-            key={data.id}
+            key={data._id}
             src={data.imageUrl}
             style={{ translate: `${-100 * imgIndex}%` }}
             className="w-full object-cover object-center flex-shrink-0 flex-grow-0 ease-in-out duration-1000 block"
@@ -71,7 +79,7 @@ const Carousel = () => {
       >
         {bgImage.map((data, index) => (
           <button
-            key={data.id}
+            key={data._id}
             type="radio"
             name={index}
             className={`border border-cWhite sm:w-4 sm:h-4 h-3 w-3 rounded-full ${

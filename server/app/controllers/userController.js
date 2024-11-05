@@ -4,7 +4,6 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
-
 //Signup API......
 const register = async (req, res) => {
   try {
@@ -17,6 +16,8 @@ const register = async (req, res) => {
       confirmPassword,
       avatar,
     } = req.body;
+
+    // console.log("log inside the controller",req.file)
 
     // console.log(req.file.path)
     const userData = {
@@ -45,51 +46,62 @@ const register = async (req, res) => {
     //checks password and confirm password are same.....
 
     if (password !== confirmPassword) {
-      return res.status(400).json(
-        new ApiError(401, "password and confirm password should be same")
-      );
+      return res
+        .status(400)
+        .json(
+          new ApiError(401, "password and confirm password should be same")
+        );
     }
 
     //checks if user is already registered...
 
     const existing_email = await userModel.findOne({ email });
     if (existing_email) {
-      return res.status(409).json(
-        new ApiError(409, "email is already registered")
-      );
+      return res
+        .status(409)
+        .json(new ApiError(409, "email is already registered"));
     }
 
     const existing_number = await userModel.findOne({ phone });
     if (existing_number) {
-      return res.status(409).json(
-        new ApiError(409, "phone number is already registered")
-      );
+      return res
+        .status(409)
+        .json(new ApiError(409, "phone number is already registered"));
     }
 
     const hashedPassword = encryptedPassword(password);
 
     const avatarLocalPath = req.file?.path;
 
-    if(avatarLocalPath){
-      const cloudinaryRes = await uploadOnCloudinary(avatarLocalPath);
+    const cloudinaryResUrl = await uploadOnCloudinary(
+      avatarLocalPath,
+      "usersAvatar"
+    );
 
-      console.log(cloudinaryRes)
-    };
+    const dbRes = await userModel.create({
+      ...userData,
+      avatar: cloudinaryResUrl || "",
+      password: hashedPassword,
+    });
 
+    // just for testing......
+    const createdUser = await userModel.findById(dbRes._id).select("-password");
 
-    // const dbRes = await userModel.create({
-    //   ...userData,
-    //   password: hashedPassword,
-    // });
+    if (!createdUser) {
+      throw new ApiError(
+        500,
+        "something went wrong while registering the user"
+      );
+    }
 
-    // return res.status(201).json(
-    //   new ApiResponse(
-    //     200, 
-    //     true,
-    //     "user created successfully",
-    //     {id: dbRes._id, userName: dbRes.firstName + " " + dbRes.lastName, avatar:dbRes.avatar},
-    // )
-    // );
+    return res.status(201).json(
+      new ApiResponse(
+        200,
+        true,
+        "user registered successfully",
+        createdUser
+      )
+    );
   } catch (error) {
     return res.status(500).json({
       status: "failed",
@@ -98,28 +110,27 @@ const register = async (req, res) => {
   }
 };
 
+
+
 // login API.....
 const login = async (req, res) => {
   try {
-    console.log(req.query);
 
     const { email, password } = req.query;
 
     if (!email || !password) {
-      return res.status(400).json({
-        status: "failed",
-        message: "both fields are required",
-      });
+      return res.status(400).json(
+        new ApiError(401, "both fields are required")
+      );
     }
 
     // matching email in data_base..........
     const get_user = await userModel.findOne({ email });
 
     if (!get_user) {
-      return res.status(404).json({
-        status: "failed",
-        message: "email is not registered",
-      });
+      return res.status(404).json(
+        new ApiError(400, "email is not registered")
+      );
     }
 
     const password_result = compare_password(password, get_user.password);
@@ -131,19 +142,11 @@ const login = async (req, res) => {
       });
     }
 
-    return res.status(200).json({
-      status: "success",
-      message: "login successfully",
-      userData: {
-        id: get_user._id,
-        fullName: `${get_user.firstName} ${get_user.lastName}`,
-      },
-    });
+    return res.status(200).json(
+      new ApiResponse(200, true ,"logged in successfully", get_user)
+    );
   } catch (error) {
-    return res.status(500).json({
-      status: "failed",
-      message: `oops there is some error ${error}`,
-    });
+    throw new ApiError(500, error.message || "something went wrong")
   }
 };
 

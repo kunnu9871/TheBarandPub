@@ -21,16 +21,19 @@ app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
 
 
+// public assets of website.....
+import { publicAssets } from "./app/controllers/assetsController.js";
+app.get('/', publicAssets);
 
 // User routes.....
 import userRouter from "./app/routes/user.js";
 app.use("/user", userRouter);
 
 
-
 // Admin routes.......
 import adminRouter from "./app/routes/admin.js";
 app.use("/admin", adminRouter);
+
 
 // Menu items routes......
 import itemsRouter from "./app/routes/Items.js";

@@ -26,11 +26,9 @@ const Cart = () => {
           <div>
             <p className="text-2xl font-semibold mb-4">Your cart is empty.</p>
             <button
-              onClick={() => navigate("/")}
               onClick={() => navigate("/menu")}
               className="my-10 rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
-              Continue Shopping
               Place order
             </button>
           </div>
@@ -42,7 +40,7 @@ const Cart = () => {
                 className="flex items-center border-b border-gray-200 py-4"
               >
                 <img
-                  src={item.imageUrl}
+                  src={item.itemImage}
                   alt={item.name}
                   className="w-auto h-24 object-cover rounded mr-4"
                 />

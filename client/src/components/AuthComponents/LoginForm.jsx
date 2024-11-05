@@ -53,8 +53,9 @@ const LoginForm = ({
     event.preventDefault();
     // calling API....
     const userData = await login(formData);
+    console.log(userData)
 
-    if (userData.status === "success") {
+    if (userData.status) {
       dispatch(loginSuccess(userData));
       setIsLoginFormOpen((prev) => !prev);
       // navigate('/')

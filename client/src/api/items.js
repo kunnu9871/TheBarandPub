@@ -15,18 +15,16 @@ const menuItems = async () => {
 };
 
 
-const addItem = async (bodyData) =>{
+const addItem = async (formData) =>{
     try {
         const addItemResponse = await fetch("http://localhost:3000/admin/addItem", {
             method: "POST",
-            headers: {
-                "content-type": "application/json",
-              },
-            body: JSON.stringify(bodyData)  
+            body: formData  
         })
+
     
-        if(!addItemResponse.ok){
-             throw new error (`Error : ${addItemResponse.status}`) 
+        if(!addItemResponse){
+             throw new Error (`Error : ${addItemResponse.status}`) 
         };
         
         const addItemJsonResponse = await addItemResponse.json();
@@ -35,7 +33,7 @@ const addItem = async (bodyData) =>{
 
 
     } catch (error) {
-        return error;
+        return error.message;
     }
 };
 

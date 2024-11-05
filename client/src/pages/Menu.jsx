@@ -19,6 +19,7 @@ const Menu = () => {
   const memo = useMemo(() => {
     const apiCalling = async () => {
       const apiResponse = await menuItems();
+      console.log(apiResponse);
       setItems(apiResponse);
     };
     return apiCalling;
@@ -27,7 +28,6 @@ const Menu = () => {
   useEffect(() => {
     memo();
   }, [memo]);
-
 
   const handleSize = (id, value) => {
     const existingItem = size.find((item) => item.id === id);
@@ -44,21 +44,23 @@ const Menu = () => {
   const handleQuantity = (id, action) => {
     const existingItem = quantity.find((item) => item.id === id);
 
-    if(action === "increment"){
+    if (action === "increment") {
       if (existingItem) {
         setQuantity((prev) =>
           prev.map((item) =>
             item.id === id ? { ...item, quantity: item.quantity + 1 } : item
           )
         );
-      }else{
-         setQuantity((prev)=> [...prev, {id:id, quantity : 1}])
-      };
-    }else{
+      } else {
+        setQuantity((prev) => [...prev, { id: id, quantity: 1 }]);
+      }
+    } else {
       if (existingItem) {
         setQuantity((prev) =>
           prev.map((item) =>
-            (item.id === existingItem.id && item.quantity > 0) ? { ...item, quantity: item.quantity - 1 } : item
+            item.id === existingItem.id && item.quantity > 0
+              ? { ...item, quantity: item.quantity - 1 }
+              : item
           )
         );
       }
@@ -67,8 +69,9 @@ const Menu = () => {
 
   const handleAddToCart = (id) => {
     const selectedItem = items.find((item) => item._id === id);
-    const selectedQuantity = quantity.find((item) => item.id === id)?.quantity || 0;
-    const selectedSize = size.find((item)=> item.id === id)?.size || '';
+    const selectedQuantity =
+      quantity.find((item) => item.id === id)?.quantity || 0;
+    const selectedSize = size.find((item) => item.id === id)?.size || "";
 
     if (!selectedSize) {
       alert("Please select a size before adding to the cart.");
@@ -80,7 +83,7 @@ const Menu = () => {
         addToCart({
           id: selectedItem._id,
           name: selectedItem.itemName,
-          imageUrl: selectedItem.imageUrl,
+          itemImage: selectedItem.itemImage,
           selectedQuantity,
           selectedSize,
         })
@@ -91,32 +94,64 @@ const Menu = () => {
   };
 
   return (
-    <div
-      id="menuPage"
-      className="w-full bg-cWhite flex gap-12"
-    >
-
-      {/* left side filter menu */} 
+    <div id="menuPage" className="w-full bg-cWhite flex gap-12">
       <aside
-        className="border-2 border-black sm:min-w-[300px] sm:min-h-[400px] sticky top-20 sm:max-h-[600px] mt-8 ml-8 rounded-3xl" 
-      ></aside>
+        className="bg-white shadow-lg sm:min-w-[300px] sm:min-h-[400px] sticky top-20 sm:max-h-[600px] 
+         mt-8 ml-8 rounded-3xl flex-col justify-center pt-4 px-4"
+      >
+        <p className="text-center font-bold text-2xl text-black mb-4">
+          Category
+        </p>
 
-      {/* menu section */} 
+        <div id="drinks" className="mb-6">
+          <p className="font-semibold text-lg text-black mb-2 bg-gray-100 rounded-md p-1">Drinks</p>
+          <button className="block w-full py-2 px-4 mb-2 rounded-lg bg-white text-black hover:bg-gray-200 transition-transform duration-300 hover:-translate-y-1">
+            Whiskey
+          </button>
+          <button className="block w-full py-2 px-4 mb-2 rounded-lg bg-white text-black hover:bg-gray-200 transition-transform duration-300 hover:-translate-y-1">
+            Beer
+          </button>
+          <button className="block w-full py-2 px-4 mb-2 rounded-lg bg-white text-black hover:bg-gray-200 transition-transform duration-300 hover:-translate-y-1">
+            Vodka
+          </button>
+          <button className="block w-full py-2 px-4 rounded-lg bg-white text-black hover:bg-gray-200 transition-transform duration-300 hover:-translate-y-1">
+            Soft Drinks
+          </button>
+        </div>
+
+        <div id="food">
+          <p className="font-semibold text-lg text-black mb-2 bg-gray-100 rounded-md p-1">Food</p>
+          <button className="block w-full py-2 px-4 mb-2 rounded-lg bg-white text-black hover:bg-gray-200 transition-transform duration-300 hover:-translate-y-1">
+            Chakhna
+          </button>
+          <button className="block w-full py-2 px-4 mb-2 rounded-lg bg-white text-black hover:bg-gray-200 transition-transform duration-300 hover:-translate-y-1">
+            Starter
+          </button>
+          <button className="block w-full py-2 px-4 mb-2 rounded-lg bg-white text-black hover:bg-gray-200 transition-transform duration-300 hover:-translate-y-1">
+            Main Course
+          </button>
+          <button className="block w-full py-2 px-4 rounded-lg bg-white text-black hover:bg-gray-200 transition-transform duration-300 hover:-translate-y-1">
+            Desserts
+          </button>
+        </div>
+      </aside>
+
+      {/* menu section */}
       <div
-        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}
-        className="sm:w-3/4 grid gap-6 justify-center overflow-hidden p-8"
+        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}
+        className="w-[80%] grid gap-6 justify-center overflow-hidden p-8"
       >
         {items.map((data) => (
           <div
             id={data._id}
             key={data._id}
-            className="w-full rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-1.5 ease-in-out duration-300 cursor-pointer"
+            className="w-[300px] rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-1.5 ease-in-out duration-300 cursor-pointer"
           >
             {/* Image Section */}
             <div className="relative">
               <img
-                className="w-full h-40 object-fit object-center"
-                src={data.imageUrl}
+                className="w-full h-40 object-cover object-center"
+                src={data.itemImage}
                 alt={data.itemName}
               />
             </div>
@@ -157,7 +192,8 @@ const Menu = () => {
                     -
                   </button>
                   <span className="text-black font-bold text-xl">
-                    {quantity.find((item) => item.id === data._id)?.quantity || 0}
+                    {quantity.find((item) => item.id === data._id)?.quantity ||
+                      0}
                   </span>
                   <button
                     name="increment"
@@ -170,7 +206,7 @@ const Menu = () => {
 
                 <button
                   onClick={() => handleAddToCart(data._id)}
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded"
                 >
                   Add to Cart
                 </button>

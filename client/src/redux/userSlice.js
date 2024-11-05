@@ -4,7 +4,7 @@ const local = JSON.parse(localStorage?.getItem('user')) || {};
 
 const initialState = {
     isLoggedIn: local.isLoggedIn || false,
-    userData: local.fullName || ''
+    userData: local || ''
 };
  
 
@@ -14,16 +14,18 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         loginSuccess: (state, action) => {
-            const { userData, status } = action.payload;
-            if (status === 'success') {
+            // console.log(action.payload)
+            const { data, status } = action.payload;
+            console.log(data)
+            if (status) {
                 
                 state.isLoggedIn = true;
-                state.userData = userData.fullName;
+                state.userData = data;
 
                 // adding user data in local storage...
 
                 localStorage.setItem('user', JSON.stringify({
-                    ...userData, 
+                    ...data, 
                     isLoggedIn: true
                 }));
             }

@@ -2,7 +2,11 @@ import { useState } from "react";
 import { register } from "../../api/api";
 import { IoMdClose } from "react-icons/io";
 
-const SignUpForm = ({ setIsSignupFormOpen, setIsAuthComponentOpen, setFormType }) => {
+const SignUpForm = ({
+  setIsSignupFormOpen,
+  setIsAuthComponentOpen,
+  setFormType,
+}) => {
   const initial_state = {
     firstName: "",
     lastName: "",
@@ -10,28 +14,45 @@ const SignUpForm = ({ setIsSignupFormOpen, setIsAuthComponentOpen, setFormType }
     phone: "",
     password: "",
     confirmPassword: "",
+    avatar: "",
   };
   const [formData, setFormData] = useState(initial_state);
-
+  console.log(formData)
   const handle_formData = (event) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
+    const { type, name, files, value } = event.target;
+    if (type === "file") {
+      setFormData({ ...formData, [name]: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
-  
+
   const handle_submit = async (event) => {
     event.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
+    try {
+      if (formData.password !== formData.confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+      const formDataToSend = new FormData();
+      for (let key in formData) {
+        formDataToSend.append(key, formData[key]);
+      }
+  
+      
+      const response = await register(formDataToSend);
+      if (response.status) {
+        alert("sign up successfully, Please login");
+        setFormData(initial_state);
+        setIsSignupFormOpen((prev) => !prev);
+      }
+      console.log(response)
+    } catch (error) {
+      console.log(error)
     }
-    setFormData(initial_state);
-
-    const response = await register(formData);
-    if(response.status === "success"){
-      alert('sign up successfully, Please login')
-      setIsSignupFormOpen((prev)=> !prev);
-    };
   };
+
   return (
     <div
       className="h-dvh fixed top-0 w-full flex items-center justify-center
@@ -61,6 +82,7 @@ const SignUpForm = ({ setIsSignupFormOpen, setIsAuthComponentOpen, setFormType }
         {/* // input fields starts from here...... */}
         <form
           onSubmit={handle_submit}
+          enctype="multipart/form-data"
           className="flex flex-col gap-3 pt-6 px-2"
         >
           <input
@@ -90,7 +112,8 @@ const SignUpForm = ({ setIsSignupFormOpen, setIsAuthComponentOpen, setFormType }
             className="rounded-xl p-2 border"
           />
           <input
-            type="number"
+            type="tel"
+            pattern="[0-9]{10}"
             onChange={handle_formData}
             value={formData.phone}
             name="phone"
@@ -116,6 +139,13 @@ const SignUpForm = ({ setIsSignupFormOpen, setIsAuthComponentOpen, setFormType }
             placeholder="Confirm Password"
             className="rounded-xl p-2 border"
           />
+          <input
+            type="file"
+            name="avatar"
+            accept="png, jpeg, jpg"
+            className="rounded-xl p-2 border"
+            onChange={handle_formData}
+          />
           <button
             type="submit"
             className="rounded-xl flex justify-center py-2 text-white bg-cBlue
@@ -129,12 +159,13 @@ const SignUpForm = ({ setIsSignupFormOpen, setIsAuthComponentOpen, setFormType }
         <div className="flex gap-2 border-t-2 p-4 justify-center items-center">
           <p>Already have an account?</p>
           <button
-            onClick={()=> {
-              setIsSignupFormOpen((prev)=> !prev);
-              setIsAuthComponentOpen((prev)=> !prev)
-              setFormType('login')
+            onClick={() => {
+              setIsSignupFormOpen((prev) => !prev);
+              setIsAuthComponentOpen((prev) => !prev);
+              setFormType("login");
             }}
-          className="text-blue-600 font-semibold hover:underline">
+            className="text-blue-600 font-semibold hover:underline"
+          >
             Log in
           </button>
         </div>

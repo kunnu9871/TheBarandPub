@@ -11,7 +11,7 @@ const itemsSchema = new mongoose.Schema(
     },
     alcoholType: { type: String, required: true, enum:["whiskey", "beer", "softDrink"], default : ["whiskey"] },
     size: { type: [String], required: true },
-    imageUrl: { type: String,required: true, trim: true },
+    itemImage: { type: String,required: true, trim: true },
   },
   { Timestamp: true }
 );

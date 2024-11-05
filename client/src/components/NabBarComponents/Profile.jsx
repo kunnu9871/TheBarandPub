@@ -7,7 +7,8 @@ import { toast, Bounce } from "react-toastify";
 
 const Profile = ({ setIsProfileOpen }) => {
   const [userPicture, setUserPicture] = useState("/assets/profilePic.png");
-  const userName = useSelector((state) => state.user.userData);
+  const {userData:{firstName, lastName, avatar}, isLoggedIn} = useSelector((state) => state.user);
+  
 
   const navigate = useNavigate();
 
@@ -46,13 +47,13 @@ const Profile = ({ setIsProfileOpen }) => {
       >
         <div className="border-2 border-black h-32 w-32 rounded-full overflow-hidden">
           <img
-            src={userPicture}
+            src={avatar || userPicture}
             alt="profilePicture"
             className="object-cover object-center"
           />
         </div>
         <CiCamera className="h-6 w-6 absolute right-[30%] bottom-14 cursor-pointer" />
-        <p className="font-bold text-lg text-center">{userName}</p>
+        <p className="font-bold text-lg text-center">{`${firstName} ${lastName}`}</p>
       </div>
 
       <div
