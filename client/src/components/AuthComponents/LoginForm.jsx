@@ -3,9 +3,8 @@ import { IoMdClose } from "react-icons/io";
 import { login } from "../../api/api.js";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/userSlice.js";
-import { toast, Bounce } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
+import notify from "../../utils/reactTosterNotification.js";
 
 const LoginForm = ({
   setIsLoginFormOpen,
@@ -21,19 +20,7 @@ const LoginForm = ({
   const select = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  // react tostify BiSlider.............
-  const notify = () =>
-    toast.success("Login successfully", {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
+
 
   const navigate = useNavigate();
 
@@ -58,8 +45,8 @@ const LoginForm = ({
     if (userData.status) {
       dispatch(loginSuccess(userData));
       setIsLoginFormOpen((prev) => !prev);
-      // navigate('/')
-      notify();
+      navigate('/')
+      notify('Login Successfully');
     } else {
       alert(`ops! ${userData.message}`);
     }

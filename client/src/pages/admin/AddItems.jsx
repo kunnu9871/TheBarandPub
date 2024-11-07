@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { addItem } from "../../api/items";
+import ItemQuantity from "./components/ItemQuantity";
+import notify from "../../utils/reactTosterNotification";
+import { toast, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddItems = () => {
   const initialState = {
     itemName: "",
+    category: "",
     drinkType: "",
     alcoholType: "",
     size: [],
@@ -11,40 +16,28 @@ const AddItems = () => {
   };
   const [itemDetails, setItemDetails] = useState(initialState);
 
-
-  const availableQuantity = ["30ml", "60ml", "180ml", "half", "full"];
-
   const handleChange = (event) => {
-    const { name, value, type, checked, files } = event.target;
+    const { name, value, type, files } = event.target;
 
     if (type === "file") {
       setItemDetails({ ...itemDetails, [name]: files[0] });
     } else {
-      if (type === "checkbox") {
-        if (checked) {
-          setItemDetails((prevState) => ({
-            ...prevState,
-            size: [...prevState.size, value],
-          }));
-        } else {
-          setItemDetails((prevState) => ({
-            ...prevState,
-            size: prevState.size.filter((size) => size !== value),
-          }));
-        }
-      } else {
-        setItemDetails({
-          ...itemDetails,
-          [name]: value,
-        });
-      }
+      setItemDetails({
+        ...itemDetails,
+        [name]: value,
+      });
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    if (!itemDetails.itemName ||!itemDetails.drinkType ||!itemDetails.alcoholType || itemDetails.size.length === 0 ||!itemDetails.itemImage) {
+    if (
+      !itemDetails.itemName ||
+      !itemDetails.drinkType ||
+      !itemDetails.alcoholType ||
+      itemDetails.size.length === 0 ||
+      !itemDetails.itemImage
+    ) {
       alert("Please fill in all required fields");
       return;
     }
@@ -58,10 +51,31 @@ const AddItems = () => {
       }
     }
 
-    const response = await addItem(formDataToSend);
-    if(response.status) {
-      setItemDetails(initialState)
-    }
+    // const response = await addItem(formDataToSend);
+    // if (response.status) {
+    //   notify("Item added successfully", 2000, "top-center")
+    //   setItemDetails(initialState);
+    // }
+
+    toast.promise(
+        addItem(formDataToSend), 
+        {
+          pending: "Adding item, please wait...",
+          success: "Item added successfully!",
+          error: "Failed to add item. Please try again.",
+        },
+        {
+          position : "top-center",
+          autoClose: 3000,
+          theme: "dark",
+        }
+      )
+      .then(() => {
+        setItemDetails(initialState);
+      })
+      .catch((error) => {
+        console.error("Error adding item:", error);
+      });
   };
 
   return (
@@ -133,19 +147,11 @@ const AddItems = () => {
 
         <div className="mb-4">
           <p className="block text-gray-700 font-medium mb-2">Size</p>
-          <div className="flex gap-8">
-            {availableQuantity.map((qty, index) => (
-              <div key={index} className="flex gap-2">
-                <p>{qty}</p>
-                <input
-                  onChange={handleChange}
-                  type="checkBox"
-                  name={qty}
-                  value={qty}
-                />
-              </div>
-            ))}
-          </div>
+          {/* set item quantity component imported form admin components... */}
+          <ItemQuantity
+            itemDetails={itemDetails}
+            setItemDetails={setItemDetails}
+          />
         </div>
 
         <div className="mb-4">
@@ -161,12 +167,13 @@ const AddItems = () => {
             accept="png, jpeg, jpg"
             id="itemImage"
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all"
+            // className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all"
+            className="block w-full text-sm rounded-lg border border-gray-300 text-slate-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
           />
         </div>
 
         <button
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="w-full bg-gradient-to-r from-blue-400 to-blue-700 text-white font-bold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-blue-400 transition-all focus:outline-none focus:ring-2 focus:ring-black"
           onClick={handleSubmit}
         >
           Submit

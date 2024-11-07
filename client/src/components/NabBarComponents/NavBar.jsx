@@ -75,7 +75,7 @@ const NavBar = ({ setIsAuthComponentOpen, setFormType }) => {
             </li>
             <li className="navLink">
               <NavLink
-                to="/contactUS"
+                to="/contact"
                 className={({ isActive }) =>
                   isActive
                     ? "flex items-center text-pink-500 bg-black"

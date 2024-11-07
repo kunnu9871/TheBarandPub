@@ -101,6 +101,7 @@ const Menu = () => {
       >
         <p className="text-center font-bold text-2xl text-black mb-4">
           Category
+          
         </p>
 
         <div id="drinks" className="mb-6">
