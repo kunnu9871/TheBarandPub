@@ -1,6 +1,8 @@
-import imageData from "../../store/imageData.js";
 
 const Gallery = () => {
+
+  const imageData = [1,2,3,4];
+
   return (
     <div className="py-12 bg-white" id="menu">
       <h2 className="text-3xl text-center font-bold mb-8">Gallery</h2>

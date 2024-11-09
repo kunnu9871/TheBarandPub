@@ -1,8 +1,10 @@
+import baseURL from "../utils/baseURL.js";
+ 
 // creating a new user account.....
 const register = async (formData) => {
   try {
     const registerResponse = await fetch(
-      "http://localhost:3000/user/register",
+      `${baseURL}user/register`,
       {
         method: "POST",
         body: formData,
@@ -23,7 +25,7 @@ const login = async (bodyData) => {
     const queryParams = new URLSearchParams(bodyData).toString();
 
     const loginResponse = await fetch(
-      `http://localhost:3000/user/login?${queryParams}`,
+      `${baseURL}user/login?${queryParams}`,
       {
         method: "GET",
         headers: {

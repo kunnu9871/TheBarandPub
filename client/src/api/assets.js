@@ -1,6 +1,9 @@
+import baseURL from "../utils/baseURL.js";
+
+
 const publicAssets = async () => {
   try {
-    const assets = await fetch("http://localhost:3000/", {
+    const assets = await fetch(baseURL, {
       method: "GET",
       headers: {
         "content-type": "application/json",

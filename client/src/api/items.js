@@ -1,7 +1,9 @@
+import baseURL from "../utils/baseURL.js";
+
 
 // get all menu items from API......
 const menuItems = async () => {
-    const allItemsResponse = await fetch('http://localhost:3000/items/allItems', {
+    const allItemsResponse = await fetch(`${baseURL}items/allItems`, {
         method: 'GET',
         headers: {
             "content-type": "application/json",
@@ -17,7 +19,7 @@ const menuItems = async () => {
 
 const addItem = async (formData) =>{
     try {
-        const addItemResponse = await fetch("http://localhost:3000/admin/addItem", {
+        const addItemResponse = await fetch(`${baseURL}admin/addItem`, {
             method: "POST",
             body: formData  
         })
