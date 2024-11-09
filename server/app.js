@@ -36,7 +36,7 @@ app.use("/admin", adminRouter);
 
 
 // Menu items routes......
-import itemsRouter from "./app/routes/Items.js";
+import itemsRouter from "./app/routes/items.js";
 app.use("/items", itemsRouter);
 
 
